@@ -4,5 +4,17 @@
     <title>liltr</title>
     <language>en</language>
 
+    <item>
+      <title>Version 0.0.9</title>
+      <sparkle:version>0.0.9</sparkle:version>
+      <pubDate>Mon, 12 Feb 2024 10:16:14 +0000</pubDate>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <enclosure
+        url="https://github.com/rhinoc/liltr/releases/download/v0.0.9/liltr.0.0.9.dmg"
+        sparkle:edSignature="wu1ZGfA9scyiAm7AlzQqwdqPytAWbcu/BOM3wwkZQnQOdffr27LAx7gRZ5tOrPop83oEn/jncceg3xRDngW1AQ==" length="5588077"
+        type="application/octet-stream"/>
+    </item>
+
+
   </channel>
 </rss>
