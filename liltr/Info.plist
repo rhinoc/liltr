@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>APP_NAME</key>
+	<string>liltr</string>
+	<key>AliAK</key>
+	<string></string>
+	<key>AliSK</key>
+	<string></string>
+	<key>BaiduAK</key>
+	<string></string>
+	<key>BaiduSK</key>
+	<string></string>
+	<key>BigHugeThesaurusSK</key>
+	<string></string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.0.8</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.rhinoc.liltr</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>liltr</string>
+			</array>
+		</dict>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>0.0.8</string>
+	<key>LSUIElement</key>
+	<true/>
+	<key>NiuTransSK</key>
+	<string></string>
+	<key>SUFeedURL</key>
+	<string>https://raw.githubusercontent.com/rhinoc/liltr/main/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>jhRLvU+V5Vdg0XzLT8BD/ogDVcRh33w2cR8Ri7xGrCk=</string>
+	<key>VolcengineAK</key>
+	<string></string>
+	<key>VolcengineSK</key>
+	<string></string>
+</dict>
+</plist>

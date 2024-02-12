@@ -1,0 +1,12 @@
+.DS_Store
+
+Packages
+build
+DerivedData
+xcuserdata
+
+version.txt
+*_tmp.txt
+
+# *.xcodeproj
+.cosine
