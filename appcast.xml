@@ -5,6 +5,18 @@
     <language>en</language>
 
     <item>
+      <title>Version 0.0.10</title>
+      <sparkle:version>0.0.10</sparkle:version>
+      <pubDate>Sat, 20 Jul 2024 09:13:35 +0000</pubDate>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <enclosure
+        url="https://github.com/rhinoc/liltr/releases/download/v0.0.10/liltr.0.0.10.dmg"
+        sparkle:edSignature="gTxF9q7z9XVUxivfZJREk5PMztzx0Fr55ZJp0DKIM/J1FsESYNQDQPAVZs7Qmj4/VO+USVYjHc9kCZocUUZUCA==" length="5673215"
+        type="application/octet-stream"/>
+    </item>
+
+
+    <item>
       <title>Version 0.0.9</title>
       <sparkle:version>0.0.9</sparkle:version>
       <pubDate>Mon, 12 Feb 2024 10:16:14 +0000</pubDate>
