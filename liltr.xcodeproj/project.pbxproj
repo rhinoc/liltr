@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		12F1730A2C4B9566009FD444 /* Ollama.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12F173092C4B9566009FD444 /* Ollama.swift */; };
 		2B0437D22B79D5D800792E8B /* AppleScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0437D12B79D5D800792E8B /* AppleScript.swift */; };
 		2B0437D42B79E2F000792E8B /* Pasteboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0437D32B79E2F000792E8B /* Pasteboard.swift */; };
 		2B0437D62B79E34900792E8B /* SelectedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0437D52B79E34900792E8B /* SelectedText.swift */; };
@@ -59,6 +60,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		12F173092C4B9566009FD444 /* Ollama.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ollama.swift; sourceTree = "<group>"; };
 		2B0437D12B79D5D800792E8B /* AppleScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleScript.swift; sourceTree = "<group>"; };
 		2B0437D32B79E2F000792E8B /* Pasteboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pasteboard.swift; sourceTree = "<group>"; };
 		2B0437D52B79E34900792E8B /* SelectedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedText.swift; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 				2B7CF3002B75BCB400BFA0BA /* Volcengine.swift */,
 				2B7CF2FE2B75BCB400BFA0BA /* AppleDictionary.swift */,
 				2B7CF2FF2B75BCB400BFA0BA /* ProviderManager.swift */,
+				12F173092C4B9566009FD444 /* Ollama.swift */,
 			);
 			path = Provider;
 			sourceTree = "<group>";
@@ -415,6 +418,7 @@
 				2B0437D62B79E34900792E8B /* SelectedText.swift in Sources */,
 				2B7CF38E2B75C00400BFA0BA /* TranslateFieldView.swift in Sources */,
 				2B7CF31C2B75BCB400BFA0BA /* NiuTrans.swift in Sources */,
+				12F1730A2C4B9566009FD444 /* Ollama.swift in Sources */,
 				2B7CF31F2B75BCB400BFA0BA /* ProviderManager.swift in Sources */,
 				2B7CF31A2B75BCB400BFA0BA /* BigHugeThesaurus.swift in Sources */,
 				2B7CF3242B75BCB400BFA0BA /* extensions.swift in Sources */,

@@ -31,6 +31,9 @@ public class Defaults: ObservableObject {
     @AppStorage("\(AliProviderName)SK") public var AliSK = ""
     // big huge
     @AppStorage("\(BigHugeThesaurusProviderName)SK") public var BigHugeThesaurusSK = ""
+    // ollama
+    @AppStorage("\(OllamaProviderName)API") public var OllamaAPI = ""
+    @AppStorage("\(OllamaProviderName)Model") public var OllamaModel = ""
 
     // MARK: Dictionary
     @AppStorage("dictionary") public var dictionary = DCSOxfordDictionaryOfEnglish

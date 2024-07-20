@@ -12,7 +12,7 @@ protocol BaseResponse: Decodable {
     var errorMessage: String? { get }
 }
 
-let PROVIDER_ARRAY: [any BaseProvider] = [NiuTransProvider.shared, BaiduProvider.shared, VolcengineProvider.shared, AliProvider.shared, AppleDictionaryProvider.shared, BigHugeThesaurusProvider.shared]
+let PROVIDER_ARRAY: [any BaseProvider] = [NiuTransProvider.shared, BaiduProvider.shared, VolcengineProvider.shared, AliProvider.shared, AppleDictionaryProvider.shared, BigHugeThesaurusProvider.shared, OllamaProvider.shared]
 let PROVIDER_DICT: [String: any BaseProvider] = Dictionary(uniqueKeysWithValues: PROVIDER_ARRAY.map { ($0.name, $0) })
 
 struct ProviderCallbackData {
@@ -70,7 +70,14 @@ class ProviderManager: ObservableObject {
             if query == curQuery {
                 let data = ProviderCallbackData(target, source, sourceLanguage: _sourceLanguage, targetLanguage: _targetLanguage?.name == _sourceLanguage?.name ? nil : _targetLanguage, providerName: cur.name)
                 cb(data)
-                resultCache[query] = data
+                
+                if _sourceLanguage == nil && _targetLanguage == nil {
+                    // if is error
+                } else {
+                    // if not error
+                    resultCache[query] = data
+                }
+                
                 isTranslating = false
                 curQuery = ""
             }

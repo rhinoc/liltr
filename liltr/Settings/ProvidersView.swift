@@ -62,6 +62,9 @@ struct ProvidersView: View {
 
     @Default(\.BigHugeThesaurusSK) var bigHugeThesaurusSK
     
+    @Default(\.OllamaAPI) var ollamaApi
+    @Default(\.OllamaModel) var ollamaModel
+    
     @Default(\.dictionary) var dictionary
 
     private let _gapSize: CGFloat = 8
@@ -102,6 +105,9 @@ struct ProvidersView: View {
                 ProviderKeyField(label: "Baidu", icon: "4.square", ak: $baiduAK, sk: $baiduSK)
                 
                 ProviderKeyField(label: "BigHugeThesaurus", icon: "5.square", sk: $bigHugeThesaurusSK)
+                
+                ProviderKeyField(label: "Ollama", icon: "6.square", ak: $ollamaApi, sk: $ollamaModel)
+                
             }).padding(EdgeInsets(top: 0, leading: _gapSize * 2, bottom: 0, trailing: _gapSize * 2))
         }
         .frame(width: 500, height: 220)
