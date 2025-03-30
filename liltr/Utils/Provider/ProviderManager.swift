@@ -12,7 +12,7 @@ protocol BaseResponse: Decodable {
     var errorMessage: String? { get }
 }
 
-let PROVIDER_ARRAY: [any BaseProvider] = [NiuTransProvider.shared, BaiduProvider.shared, VolcengineProvider.shared, AliProvider.shared, AppleDictionaryProvider.shared, BigHugeThesaurusProvider.shared, OllamaProvider.shared, DebugTransProvider.shared]
+let PROVIDER_ARRAY: [any BaseProvider] = [NiuTransProvider.shared, BaiduProvider.shared, VolcengineProvider.shared, AliProvider.shared, AppleDictionaryProvider.shared, BigHugeThesaurusProvider.shared, OllamaProvider.shared]
 let PROVIDER_DICT: [String: any BaseProvider] = Dictionary(uniqueKeysWithValues: PROVIDER_ARRAY.map { ($0.name, $0) })
 
 struct ProviderCallbackData {
@@ -59,7 +59,7 @@ class ProviderManager: ObservableObject {
 
     func translate(_ source: String, sourceLanguage: Language, targetLanguage: Language, _ cb: @escaping (_ data: ProviderCallbackData) -> Void) {
         // special case for dictionary
-        var cur = sourceLanguage.code == targetLanguage.code ? AppleDictionaryProvider.shared : provider
+        let cur = sourceLanguage.code == targetLanguage.code ? AppleDictionaryProvider.shared : provider
         let transformedSource = Defaults.shared.preProcessSource ? TextHandler.handle(source) : source
         if transformedSource.isEmpty {
             return

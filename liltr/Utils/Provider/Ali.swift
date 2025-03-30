@@ -53,7 +53,7 @@ class AliProvider: BaseProvider {
         let date = _getDate()
         let url = URL(string: apiUrl)!
         let path = url.path
-        let uuid = String(Int(round(Date().timeIntervalSince1970)))
+        let uuid = UUID().uuidString
         var headers = [
             "Accept": "application/json",
             "Content-Type": "application/json;chrset=utf-8",

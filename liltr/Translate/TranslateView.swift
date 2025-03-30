@@ -10,7 +10,7 @@ struct HTMLStringView: NSViewRepresentable {
     let htmlContent: String
 
     func makeNSView(context _: Context) -> WKWebView {
-        var view = WKWebView()
+        let view = WKWebView()
         view.setValue(false, forKey: "drawsBackground")
         return view
     }
@@ -161,8 +161,13 @@ struct TranslateView: View {
 
     func updateTargetText(_ result: ProviderCallbackData) {
         debugPrint("[updateTargetText]", result)
+        
+        if result.errorCode == 0 {
+            targetText = result.target
+        } else {
+            targetText = "👾👾👾\n\n\(result.target)"
+        }
 
-        targetText = result.target
         isDictionaryMode = result.isDictionary
         if result.targetLanguage != nil {
             targetLanguageCode = result.targetLanguage!.code

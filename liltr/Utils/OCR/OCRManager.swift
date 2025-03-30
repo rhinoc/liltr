@@ -19,7 +19,7 @@ class OCRManager {
     func capture() -> NSImage? {
         resetTask()
 
-        let taskId = String(Int(round(Date().timeIntervalSince1970)))
+        let taskId = UUID().uuidString
         let tempPath = NSURL.fileURL(withPathComponents: [NSTemporaryDirectory(), "capture_\(taskId).png"])!.path()
         _taskId = taskId
         _task = Process()

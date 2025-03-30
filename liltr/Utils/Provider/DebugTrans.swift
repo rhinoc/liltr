@@ -22,7 +22,7 @@ class DebugTransProvider: BaseProvider {
 
         // 模拟网络延迟
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-            cb(result, 0)
+            cb(result, randomNumber > 500 ? 3000 : 0)
         }
     }
 }
