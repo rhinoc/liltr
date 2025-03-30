@@ -1,5 +1,5 @@
-import Foundation
 import CryptoKit
+import Foundation
 
 class CryptoEncoder {
     static func str2data(_ string: String) -> Data {
@@ -50,5 +50,4 @@ class CryptoEncoder {
 //        let inputData = Data(string.utf8)
 //        return inputData.base64EncodedString()
 //    }
-
 }

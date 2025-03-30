@@ -6,19 +6,19 @@ struct ProviderKeyField: View {
 
     @Binding var ak: String
     @Binding var sk: String
-    
+
     private var disableAK: Bool
 
     init(label: String, icon: String, ak: Binding<String>? = nil, sk: Binding<String>) {
         self.label = label
         self.icon = icon
-        self._sk = sk
-        
+        _sk = sk
+
         if let ak = ak {
-            self._ak = ak
+            _ak = ak
             disableAK = false
         } else {
-            self._ak = Binding.constant("")
+            _ak = Binding.constant("")
             disableAK = true
         }
     }
@@ -31,12 +31,11 @@ struct ProviderKeyField: View {
                     .frame(width: 200)
                     .disabled(disableAK)
             }
-            
+
             HStack {
                 AlignedText(text: "Secret Key (SK)", width: 120)
                 SecureField("Secret Key", text: $sk)
                     .frame(width: 200)
-
             }
             Spacer()
         }.tabItem {
@@ -61,10 +60,10 @@ struct ProvidersView: View {
     @Default(\.AliSK) var aliSK
 
     @Default(\.BigHugeThesaurusSK) var bigHugeThesaurusSK
-    
+
     @Default(\.OllamaAPI) var ollamaApi
     @Default(\.OllamaModel) var ollamaModel
-    
+
     @Default(\.dictionary) var dictionary
 
     private let _gapSize: CGFloat = 8
@@ -103,11 +102,11 @@ struct ProvidersView: View {
                 ProviderKeyField(label: "Ali", icon: "3.square", ak: $aliAK, sk: $aliSK)
 
                 ProviderKeyField(label: "Baidu", icon: "4.square", ak: $baiduAK, sk: $baiduSK)
-                
+
                 ProviderKeyField(label: "BigHugeThesaurus", icon: "5.square", sk: $bigHugeThesaurusSK)
-                
+
                 ProviderKeyField(label: "Ollama", icon: "6.square", ak: $ollamaApi, sk: $ollamaModel)
-                
+
             }).padding(EdgeInsets(top: 0, leading: _gapSize * 2, bottom: 0, trailing: _gapSize * 2))
         }
         .frame(width: 500, height: 220)

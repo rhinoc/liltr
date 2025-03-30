@@ -1,5 +1,5 @@
-import SwiftUI
 import Sparkle
+import SwiftUI
 
 final class CheckForUpdatesViewModel: ObservableObject {
     @Published var canCheckForUpdates = false
@@ -16,8 +16,8 @@ struct AboutView: View {
     private let _updater: SPUUpdater
 
     init(updater: SPUUpdater) {
-        self._updater = updater
-        self._checkForUpdatesViewModel = CheckForUpdatesViewModel(updater: updater)
+        _updater = updater
+        _checkForUpdatesViewModel = CheckForUpdatesViewModel(updater: updater)
     }
 
     var body: some View {
@@ -33,7 +33,7 @@ struct AboutView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("\(APP_NAME)")
                         .font(.system(size: 18))
-                        .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                        .fontWeight(/*@START_MENU_TOKEN@*/ .bold/*@END_MENU_TOKEN@*/)
                         .foregroundStyle(.primary)
 
                     VStack(alignment: .leading) {
@@ -54,13 +54,13 @@ struct AboutView: View {
                 .padding(EdgeInsets(top: _gapSize, leading: 0, bottom: _gapSize, trailing: 0))
 
             HStack {
-                Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+                Button(action: /*@START_MENU_TOKEN@*/ {}/*@END_MENU_TOKEN@*/, label: {
                     Text("Acknowledgements")
                 })
 
                 Spacer()
 
-                Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+                Button(action: /*@START_MENU_TOKEN@*/ {}/*@END_MENU_TOKEN@*/, label: {
                     Text("Visit Website")
                 })
 
@@ -73,7 +73,6 @@ struct AboutView: View {
             }
             .padding(EdgeInsets(top: 0, leading: _gapSize, bottom: 0, trailing: _gapSize))
             .opacity(/*@START_MENU_TOKEN@*/0.8/*@END_MENU_TOKEN@*/)
-
         }
         .frame(width: 450, height: 140)
     }

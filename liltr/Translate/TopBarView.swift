@@ -1,5 +1,5 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 import UniformTypeIdentifiers
 
 struct TopBarView: View {
@@ -26,7 +26,6 @@ struct TopBarView: View {
     func float() {
         WindowManager.float(id: .translate, enable: floatOnTop)
     }
-
 }
 
 #Preview("TopBar", traits: .fixedLayout(width: 300, height: 200)) {

@@ -47,22 +47,22 @@ struct BigHugeThesaurusResponse: BaseResponse {
 
     var target: String? {
         var parts: [String] = []
-        let nounStr = self.parseResult(result: self.noun)
+        let nounStr = parseResult(result: noun)
         if !nounStr.isEmpty {
             parts.append("[noun]")
             parts.append(nounStr + "\n")
         }
-        let verbStr = self.parseResult(result: self.verb)
+        let verbStr = parseResult(result: verb)
         if !verbStr.isEmpty {
             parts.append("[verb]")
             parts.append(verbStr + "\n")
         }
-        let adjStr = self.parseResult(result: self.adjective)
+        let adjStr = parseResult(result: adjective)
         if !adjStr.isEmpty {
             parts.append("[adj]")
             parts.append(adjStr + "\n")
         }
-        let advStr = self.parseResult(result: self.adverb)
+        let advStr = parseResult(result: adverb)
         if !advStr.isEmpty {
             parts.append("[adv]")
             parts.append(advStr + "\n")
@@ -87,7 +87,7 @@ class BigHugeThesaurusProvider: BaseProvider {
 
     var sk = Defaults.shared.BigHugeThesaurusSK.isEmpty ? "###BIGHUGETHESAURUS_SK###" : Defaults.shared.BigHugeThesaurusSK
 
-    func translate(source: String, from: Language, to: Language, cb: @escaping (_ target: String, _ sourceLanguage: Language?, _ targetLanguage: Language?) -> Void) {
+    func translate(source: String, from _: Language, to _: Language, cb: @escaping (_ target: String, _ errorCode: Int) -> Void) {
         let word = String(source.firstWord ?? "")
         if word.isEmpty {
             return
@@ -97,11 +97,11 @@ class BigHugeThesaurusProvider: BaseProvider {
             .cacheResponse(using: .cache)
             .responseDecodable(of: BigHugeThesaurusResponse.self) { response in
                 if response.error != nil {
-                    cb(response.error!.errorDescription!, nil, nil)
+                    cb(response.error!.errorDescription!, 1000)
                 } else if response.value?.errorMessage != nil {
-                    cb(response.value!.errorMessage!, nil, nil)
+                    cb(response.value!.errorMessage!, 1001)
                 } else {
-                    cb(response.value!.target!, from, to)
+                    cb(response.value!.target!, 0)
                 }
             }
     }

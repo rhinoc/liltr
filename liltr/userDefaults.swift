@@ -7,15 +7,19 @@ public class Defaults: ObservableObject {
     @AppStorage("floatOnTop") public var floatOnTop = false
 
     // MARK: HotKey
+
     @AppStorage("hotKey") public var hotKey = ""
     @AppStorage("ocrHotKey") public var ocrHotKey = ""
+    @AppStorage("ocrOnlyHotKey") public var ocrOnlyHotKey = ""
     @AppStorage("hotKeyTriggerInNotification") public var hotKeyTriggerInNotification = true
 
     // MARK: Language
-    @AppStorage("primaryLanguage") public var primaryLanguage = LANGUAGE_ARRAY[0].code
-    @AppStorage("secondaryLanguage") public var secondaryLanguage = LANGUAGE_ARRAY[1].code
+
+    @AppStorage("primaryLanguage") public var primaryLanguage = LANGUAGE_ARRAY[1].code
+    @AppStorage("secondaryLanguage") public var secondaryLanguage = LANGUAGE_ARRAY[0].code
 
     // MARK: Provider
+
     @AppStorage("primaryProvider") public var primaryProvider = NiuTransProviderName
     @AppStorage("secondaryProvider") public var secondaryProvider = VolcengineProviderName
     // niuTrans
@@ -36,9 +40,11 @@ public class Defaults: ObservableObject {
     @AppStorage("\(OllamaProviderName)Model") public var OllamaModel = ""
 
     // MARK: Dictionary
+
     @AppStorage("dictionary") public var dictionary = DCSOxfordDictionaryOfEnglish
 
     // MARK: Advanced
+
     @AppStorage("preProcessSource") public var preProcessSource = true
 
     public static let shared = Defaults()

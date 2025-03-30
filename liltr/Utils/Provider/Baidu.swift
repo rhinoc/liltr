@@ -51,7 +51,7 @@ class BaiduProvider: BaseProvider {
         return str2
     }
 
-    func translate(source: String, from: Language, to: Language, cb: @escaping (_ target: String, _ sourceLanguage: Language?, _ targetLanguage: Language?) -> Void) {
+    func translate(source: String, from: Language, to: Language, cb: @escaping (_ target: String, _ errorCode: Int) -> Void) {
         let salt = String(Int(round(Date().timeIntervalSince1970)))
         let sign = _sign(q: source, salt: salt)
         let parameters: [String: String] = [
@@ -60,7 +60,7 @@ class BaiduProvider: BaseProvider {
             "to": to.shortCode,
             "appid": ak,
             "salt": salt,
-            "sign": sign
+            "sign": sign,
         ]
 
         debugPrint("[BaiduProvider] parameters:", parameters)
@@ -69,13 +69,12 @@ class BaiduProvider: BaseProvider {
             .cacheResponse(using: .cache)
             .responseDecodable(of: BaiduResponse.self) { response in
                 if response.error != nil {
-                    cb(response.error!.errorDescription!, nil, nil)
+                    cb(response.error!.errorDescription!, 1000)
                 } else if response.value?.errorMessage != nil {
-                    cb(response.value!.errorMessage!, nil, nil)
+                    cb(response.value!.errorMessage!, 1001)
                 } else {
-                    cb(response.value!.target!, from, to)
+                    cb(response.value!.target!, 0)
                 }
             }
     }
-
 }

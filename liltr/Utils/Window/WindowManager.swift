@@ -5,12 +5,12 @@ enum WindowID: String, Identifiable {
     case translate
     case settings
 
-    var id: String { self.rawValue }
+    var id: String { rawValue }
 }
 
 class WindowManager {
     static func getById(_ id: WindowID) -> NSWindow? {
-        let window = NSApp.windows.first(where: { $0.identifier?.rawValue == id.rawValue})
+        let window = NSApp.windows.first(where: { $0.identifier?.rawValue == id.rawValue })
         if window == nil {
             debugPrint("[WindowManager] get window \(id) failed")
         }

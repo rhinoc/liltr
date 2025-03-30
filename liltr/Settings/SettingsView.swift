@@ -1,12 +1,12 @@
-import SwiftUI
-import SwiftData
 import Sparkle
+import SwiftData
+import SwiftUI
 
 struct SettingsView: View {
     private let _updater: SPUUpdater
 
     init(updater: SPUUpdater) {
-        self._updater = updater
+        _updater = updater
     }
 
     private func _handleIncomingURL(_ url: URL) {

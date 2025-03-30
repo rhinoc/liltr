@@ -1,12 +1,12 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 import UniformTypeIdentifiers
 
 let PART_WIDTH: CGFloat = 80
 let HEIGHT: CGFloat = 20
 
 struct BottomBarView: View {
-    @Binding var languageCode: String
+    @Binding var targetLanguageCode: String
     @Binding var isDictionaryMode: Bool
     @ObservedObject var provider = ProviderManager.shared
 
@@ -57,8 +57,9 @@ struct BottomBarView: View {
 
             } else {
                 // MARK: left
+
                 HStack {
-                    LanguagePicker(languageCode: $languageCode, withLabel: false)
+                    LanguagePicker(languageCode: $targetLanguageCode, withLabel: false)
                     Spacer()
                 }
                 .frame(width: PART_WIDTH)
@@ -66,11 +67,13 @@ struct BottomBarView: View {
                 Spacer()
 
                 // MARK: mid
+
                 itemSwitchProvider
 
                 Spacer()
 
                 // MARK: right
+
                 HStack {
                     Spacer()
                     itemDictionary

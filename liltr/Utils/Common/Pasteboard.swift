@@ -1,5 +1,5 @@
-import Foundation
 import Carbon.HIToolbox
+import Foundation
 
 class PasteboardManager {
     public static let shared = PasteboardManager()

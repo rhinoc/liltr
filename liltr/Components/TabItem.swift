@@ -15,7 +15,7 @@ struct TabItem: View {
         self.label = label
         self.icon = icon
         self.active = active
-        self.sizeHolder = SizeHolder(base: sizeBase)
+        sizeHolder = SizeHolder(base: sizeBase)
     }
 
     var body: some View {
@@ -42,9 +42,9 @@ struct TabItem: View {
         let colorActive = Color.secondary.opacity(0.18)
         let colorHover = Color.secondary.opacity(0.1)
         let colorDefault = Color.clear
-        if self.active {
+        if active {
             return colorActive
-        } else if self.hovering {
+        } else if hovering {
             return colorHover
         } else {
             return colorDefault

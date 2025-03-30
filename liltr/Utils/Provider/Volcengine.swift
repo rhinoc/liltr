@@ -53,7 +53,7 @@ class VolcengineProvider: BaseProvider {
     let name = VolcengineProviderName
     let delay: DispatchTimeInterval = .microseconds(300)
     var apiUrl: String {
-        return "https://\(self.host)\(self.uri)?\(self.queryString)"
+        return "https://\(host)\(uri)?\(queryString)"
     }
 
     var ak: String {
@@ -61,7 +61,7 @@ class VolcengineProvider: BaseProvider {
     }
 
     var sk: String {
-        return  Defaults.shared.VolcengineSK.isEmpty ? "###VOLCENGINE_SK###" : Defaults.shared.VolcengineSK
+        return Defaults.shared.VolcengineSK.isEmpty ? "###VOLCENGINE_SK###" : Defaults.shared.VolcengineSK
     }
 
     private let host = "translate.volcengineapi.com"
@@ -133,11 +133,11 @@ class VolcengineProvider: BaseProvider {
         return digest.compactMap { String(format: "%02x", $0) }.joined()
     }
 
-    func translate(source: String, from: Language, to: Language, cb: @escaping (_ target: String, _ sourceLanguage: Language?, _ targetLanguage: Language?) -> Void) {
+    func translate(source: String, from: Language, to: Language, cb: @escaping (_ target: String, _ errorCode: Int) -> Void) {
         let parameters: [String: Any] = [
             "SourceLanguage": from.shortCode,
             "TargetLanguage": to.shortCode,
-            "TextList": source.split(separator: "\n")
+            "TextList": source.split(separator: "\n"),
         ]
 
         let date = _getXDate()
@@ -146,7 +146,7 @@ class VolcengineProvider: BaseProvider {
         var headers = [
             "Content-Type": "application/json",
             "Host": host,
-            "X-Date": date
+            "X-Date": date,
         ]
 
         let authorization = _sign(contentHashed: contentHashed, headers: headers)
@@ -158,13 +158,12 @@ class VolcengineProvider: BaseProvider {
             .cacheResponse(using: .cache)
             .responseDecodable(of: VolcengineResponse.self) { response in
                 if response.error != nil {
-                    cb(response.error!.errorDescription!, nil, nil)
+                    cb(response.error!.errorDescription!, 1000)
                 } else if response.value?.errorMessage != nil {
-                    cb(response.value!.errorMessage!, nil, nil)
+                    cb(response.value!.errorMessage!, 1001)
                 } else {
-                    cb(response.value!.target!, from, to)
+                    cb(response.value!.target!, 0)
                 }
             }
     }
-
 }

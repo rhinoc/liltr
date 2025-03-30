@@ -1,10 +1,11 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 import UniformTypeIdentifiers
 
 struct MidBarView: View {
     var showButton: Bool
     var isLoading: Bool
+    var isSwapDisabled: Bool
     var onSwap: () -> Void
     var onDrag: (_ height: CGFloat) -> Void = { _ in }
 
@@ -35,17 +36,17 @@ struct MidBarView: View {
                         Image(systemName: "arrow.up.arrow.down")
                     }
                     .background(Color.backgroundColor)
+                    .disabled(isSwapDisabled)
                 }
             }
         }.frame(height: height)
     }
-
 }
 
 #Preview("MidBar isLoading", traits: .fixedLayout(width: 300, height: 200)) {
-    MidBarView(showButton: true, isLoading: true, onSwap: {})
+    MidBarView(showButton: true, isLoading: true, isSwapDisabled: false, onSwap: {})
 }
 
 #Preview("MidBar", traits: .fixedLayout(width: 300, height: 200)) {
-    MidBarView(showButton: true, isLoading: false, onSwap: {})
+    MidBarView(showButton: true, isLoading: false, isSwapDisabled: false, onSwap: {})
 }

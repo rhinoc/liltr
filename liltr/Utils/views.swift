@@ -1,11 +1,11 @@
 import SwiftUI
 
 struct BlurWindow: NSViewRepresentable {
-    func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
+    func updateNSView(_: NSVisualEffectView, context _: Context) {
         //
     }
 
-    func makeNSView(context: Context) -> NSVisualEffectView {
+    func makeNSView(context _: Context) -> NSVisualEffectView {
         let view = NSVisualEffectView()
         view.blendingMode = .behindWindow
 

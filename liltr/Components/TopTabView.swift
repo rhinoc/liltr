@@ -21,7 +21,7 @@ public struct TopTabView: View {
 
     init(tabPanes: [TabPane], defaultActiveTabLabel: String? = nil) {
         self.tabPanes = tabPanes
-        self.activeTabLabel = defaultActiveTabLabel ?? tabPanes.first!.label
+        activeTabLabel = defaultActiveTabLabel ?? tabPanes.first!.label
     }
 
     public var tabBar: some View {
@@ -45,7 +45,7 @@ public struct TopTabView: View {
                 Spacer()
                     .frame(height: CGFloat(sizeHolder.outerGapSize))
                 Divider()
-                if let tabPane = tabPanes.first(where: {$0.label == activeTabLabel}) {
+                if let tabPane = tabPanes.first(where: { $0.label == activeTabLabel }) {
                     tabPane.view
                 }
             }

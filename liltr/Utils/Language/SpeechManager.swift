@@ -1,5 +1,5 @@
-import Foundation
 import AVFoundation
+import Foundation
 
 class SpeechManager {
     private static let speechSynthesizer = AVSpeechSynthesizer()
@@ -30,15 +30,17 @@ class SpeechManager {
         if speechSynthesizer.isSpeaking {
             stop()
         } else {
-            let speechUtterance: AVSpeechUtterance = AVSpeechUtterance(string: string)
+            let speechUtterance = AVSpeechUtterance(string: string)
 //            speechUtterance.rate = AVSpeechUtteranceMaximumSpeechRate / 2.5
-            speechUtterance.voice = getVoiceByLanguage(language)
+//            speechUtterance.voice = getVoiceByLanguage(language)
+            speechUtterance.voice = AVSpeechSynthesisVoice(language: language.code)
+            debugPrint("[SpeechManager.start]", speechUtterance.voice?.identifier)
             speechSynthesizer.speak(speechUtterance)
         }
     }
 
     static func getVoiceByLanguage(_ language: Language) -> AVSpeechSynthesisVoice? {
-        var resultScore: Int = 0
+        var resultScore = 0
         var result: AVSpeechSynthesisVoice?
         for voice in AVSpeechSynthesisVoice.speechVoices() {
             if voice.language == language.code || LanguageManager.getShortCode(voice.language) == language.shortCode {
@@ -51,5 +53,4 @@ class SpeechManager {
         }
         return result
     }
-
 }

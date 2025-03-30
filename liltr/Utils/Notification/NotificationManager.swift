@@ -3,7 +3,7 @@ import UserNotifications
 func pushNotification(title: String, body: String) {
     let categoryIdentifier = "translate"
     let center = UNUserNotificationCenter.current()
-    center.getNotificationSettings { (settings) in
+    center.getNotificationSettings { settings in
         if settings.authorizationStatus == .authorized {
             let content = UNMutableNotificationContent()
             content.title = title

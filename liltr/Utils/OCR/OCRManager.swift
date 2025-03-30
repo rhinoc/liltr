@@ -1,6 +1,6 @@
 import Foundation
-import Vision
 import SwiftUI
+import Vision
 
 // https://github.com/amebalabs/TRex/blob/main/TRex%20Core/TRex.swift
 // https://developer.apple.com/documentation/vision/recognizing_text_in_images
@@ -28,7 +28,7 @@ class OCRManager {
 
         do {
             try _task?.run()
-        } catch let error {
+        } catch {
             debugPrint("[OCRManager]", error)
             resetTask()
             return nil
@@ -42,9 +42,10 @@ class OCRManager {
         return NSImage(contentsOfFile: tempPath)
     }
 
-    private func _recoginizeTextHandler(request: VNRequest, error: Error?, cb: @escaping (String) -> Void) {
+    private func _recoginizeTextHandler(request: VNRequest, error _: Error?, cb: @escaping (String) -> Void) {
         guard let observations =
-                request.results as? [VNRecognizedTextObservation] else {
+            request.results as? [VNRecognizedTextObservation]
+        else {
             return
         }
         if observations.isEmpty {
@@ -52,7 +53,7 @@ class OCRManager {
             return
         }
         let recognizedStrings = observations.compactMap { observation in
-            return observation.topCandidates(1).first?.string
+            observation.topCandidates(1).first?.string
         }
 
         cb(recognizedStrings.joined(separator: "\n"))
@@ -72,7 +73,7 @@ class OCRManager {
     }
 
     func captureWithOCR(cb: @escaping (String) -> Void) {
-        let image = self.capture()
+        let image = capture()
         if image != nil {
             ocr(image: image!.cgImage(forProposedRect: nil, context: nil, hints: nil)!, cb: cb)
         }

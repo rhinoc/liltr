@@ -5,6 +5,8 @@ struct LanguagePicker: View {
     @Binding var languageCode: String
 
     var withLabel: Bool
+    var disabled: Bool = false
+    var onSelect: (() -> Void)?
 
     var body: some View {
         Picker(selection: $languageCode) {
@@ -13,5 +15,6 @@ struct LanguagePicker: View {
             }
         } label: {}
             .frame(width: withLabel ? 130 : 50)
+            .disabled(disabled)
     }
 }

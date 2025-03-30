@@ -1,5 +1,5 @@
-import Foundation
 import Carbon.HIToolbox
+import Foundation
 
 class SelectedTextManager {
     public static let shared = SelectedTextManager()
@@ -7,14 +7,14 @@ class SelectedTextManager {
     func getText(_ completion: @escaping (String?, Error?) -> Void) {
         let textByAX = _getByAX()
         debugPrint("[SelectedTextManager#_getByAX] ->", textByAX)
-        if textByAX != nil && !textByAX!.isEmpty {
+        if textByAX != nil, !textByAX!.isEmpty {
             completion(textByAX, nil)
             return
         }
 
         _getByAppleScript { textByAS, _ in
             debugPrint("[SelectedTextManager#_getByAppleScript] ->", textByAS)
-            if textByAS != nil && !textByAX!.isEmpty {
+            if textByAS != nil, !textByAX!.isEmpty {
                 completion(textByAS, nil)
                 return
             }
@@ -71,18 +71,18 @@ class SelectedTextManager {
                 end tell
             """
             executeAppleScript(source, completion: completion)
-       } else if isChromium(bundleID) {
-           let source = """
-               tell application id "\(bundleID)"
-                   tell active tab of front window
-                       set selection_text to execute javascript "window.getSelection().toString();"
-                   end tell
-               end tell
-           """
-           executeAppleScript(source, completion: completion)
-       } else {
-           completion(nil, nil)
-       }
+        } else if isChromium(bundleID) {
+            let source = """
+                tell application id "\(bundleID)"
+                    tell active tab of front window
+                        set selection_text to execute javascript "window.getSelection().toString();"
+                    end tell
+                end tell
+            """
+            executeAppleScript(source, completion: completion)
+        } else {
+            completion(nil, nil)
+        }
     }
 
     // https://stackoverflow.com/a/49502614

@@ -1,11 +1,11 @@
 import Alamofire
-import SwiftUI
 import Foundation
+import SwiftUI
 
 func replaceLinks(html: String) -> String {
     let regex = try! NSRegularExpression(pattern: "<a(?!\\w)[^>]*>(.*?)</a>")
     var result = html
-    for match in regex.matches(in: html, range: NSRange(0..<result.count)).reversed() {
+    for match in regex.matches(in: html, range: NSRange(0 ..< result.count)).reversed() {
         let curRange = Range(match.range, in: html)!
         let letterRange = Range(match.range(at: 1), in: html)!
         let captured = String(html[letterRange])
@@ -62,19 +62,19 @@ class AppleDictionaryProvider: BaseProvider {
             let definitionString = String(definition.takeRetainedValue())
             return definitionString.split(separator: " | ").joined(separator: "\n")
         } else {
-            return ("No definition found for \(word)")
+            return "No definition found for \(word)"
         }
     }
 
     private func _lookUpByDictionary(term: String, dictionary: String) -> TTTDictionaryEntry? {
-        let dictionary = TTTDictionary.init(named: dictionary)
+        let dictionary = TTTDictionary(named: dictionary)
         let entries = dictionary.entries(forSearchTerm: term) as? [TTTDictionaryEntry]
         return entries?.first
     }
 
     func getDictionaries() -> [String] {
         return TTTDictionary.availableDictionaries().map { item in
-            return item.name
+            item.name
         }
     }
 
@@ -83,22 +83,22 @@ class AppleDictionaryProvider: BaseProvider {
         let body = extractFromHTML(html: html, tag: "body")
         let trimmedBody = replaceLinks(html: body)
         let result = """
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html
-  xmlns:d="http://www.apple.com/DTDs/DictionaryService-1.0.rng"
-  class="apple_client-panel apple_appearance-compliant"
-  aria-label="explain"
-><head><meta charset="UTF-8"><style>:root{color-scheme: light dark;}</style>\(head)</head><body>\(trimmedBody)</body></html>
-"""
+        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html
+          xmlns:d="http://www.apple.com/DTDs/DictionaryService-1.0.rng"
+          class="apple_client-panel apple_appearance-compliant"
+          aria-label="explain"
+        ><head><meta charset="UTF-8"><style>:root{color-scheme: light dark;}</style>\(head)</head><body>\(trimmedBody)</body></html>
+        """
         return result
     }
 
-    func translate(source: String, from: Language, to: Language, cb: @escaping (_ target: String, _ sourceLanguage: Language?, _ targetLanguage: Language?) -> Void) {
+    func translate(source: String, from _: Language, to _: Language, cb: @escaping (_ target: String, _ errorCode: Int) -> Void) {
         if !dictionary.isEmpty {
             let result = _lookUpByDictionary(term: source, dictionary: dictionary)
             if result != nil {
-                cb(_handleHTML(result!.htmlWithPopoverCSS), nil, nil)
+                cb(_handleHTML(result!.htmlWithPopoverCSS), 0)
                 return
             }
         }
@@ -109,10 +109,10 @@ class AppleDictionaryProvider: BaseProvider {
             }
             let result = _lookUpByDictionary(term: source, dictionary: DCSOxfordDictionaryOfEnglish)
             if result != nil {
-                cb(_handleHTML(result!.htmlWithPopoverCSS), nil, nil)
+                cb(_handleHTML(result!.htmlWithPopoverCSS), 0)
                 break
             }
         }
-        cb("No definition found for \(source)", nil, nil)
+        cb("No definition found for \(source)", 2000)
     }
 }

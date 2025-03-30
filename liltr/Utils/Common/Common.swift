@@ -1,5 +1,5 @@
-import Foundation
 import Alamofire
+import Foundation
 import SwiftUI
 
 func dict2headers(dict: [String: String]) -> HTTPHeaders {
@@ -27,7 +27,7 @@ func regexMatched(_ string: String, _ regex: String) -> Bool {
         let match = regex.firstMatch(in: string, options: [], range: range)
 
         return match != nil
-    } catch let error {
+    } catch {
         return false
     }
 }

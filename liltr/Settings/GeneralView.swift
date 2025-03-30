@@ -1,7 +1,7 @@
-import SwiftUI
-import WebKit
 import KeyboardShortcuts
 import ServiceManagement
+import SwiftUI
+import WebKit
 
 struct AlignedText: View {
     let text: String
@@ -25,10 +25,11 @@ struct GeneralView: View {
     @Default(\.launchAtLogin) var launchAtLogin
     @Default(\.hotKey) var hotKey
     @Default(\.ocrHotKey) var ocrHotKey
+    @Default(\.ocrOnlyHotKey) var ocrOnlyHotKey
     @Default(\.hotKeyTriggerInNotification) var hotKeyTriggerInNotification
     @Default(\.primaryLanguage) var primaryLanguage
     @Default(\.secondaryLanguage) var secondaryLanguage
-    @Default(\.menuIconSymbol) var menuIconSymbol
+    @Default(\.menuIconSymbol) public var menuIconSymbol
     @Default(\.preProcessSource) var preProcessSource
 
     var body: some View {
@@ -54,6 +55,11 @@ struct GeneralView: View {
             HStack {
                 AlignedText(text: "OCR HotKey")
                 KeyboardShortcuts.Recorder(for: .ocr, onChange: onOCRHotkeyChange)
+            }
+
+            HStack {
+                AlignedText(text: "OCR Only HotKey")
+                KeyboardShortcuts.Recorder(for: .ocrOnly, onChange: onOCROnlyHotkeyChange)
             }
 
             HStack {
@@ -112,17 +118,25 @@ struct GeneralView: View {
 
     func onHotkeyChange(hotkey: KeyboardShortcuts.Shortcut?) {
         if hotkey != nil {
-            self.hotKey = hotkey!.description
+            hotKey = hotkey!.description
         } else {
-            self.hotKey = ""
+            hotKey = ""
         }
     }
 
     func onOCRHotkeyChange(hotkey: KeyboardShortcuts.Shortcut?) {
         if hotkey != nil {
-            self.ocrHotKey = hotkey!.description
+            ocrHotKey = hotkey!.description
         } else {
-            self.ocrHotKey = ""
+            ocrHotKey = ""
+        }
+    }
+
+    func onOCROnlyHotkeyChange(hotkey: KeyboardShortcuts.Shortcut?) {
+        if hotkey != nil {
+            ocrOnlyHotKey = hotkey!.description
+        } else {
+            ocrOnlyHotKey = ""
         }
     }
 }

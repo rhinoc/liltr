@@ -1,5 +1,6 @@
-import SwiftUI
+import Combine
 import SwiftData
+import SwiftUI
 import UniformTypeIdentifiers
 import WebKit
 
@@ -8,13 +9,13 @@ struct HTMLStringView: NSViewRepresentable {
 
     let htmlContent: String
 
-    func makeNSView(context: Context) -> WKWebView {
+    func makeNSView(context _: Context) -> WKWebView {
         var view = WKWebView()
         view.setValue(false, forKey: "drawsBackground")
         return view
     }
 
-    func updateNSView(_ nsView: WKWebView, context: Context) {
+    func updateNSView(_ nsView: WKWebView, context _: Context) {
         nsView.loadHTMLString(htmlContent, baseURL: nil)
     }
 }
@@ -24,11 +25,14 @@ struct TranslateView: View {
 
     @State private var sourceText: String = ""
     @State private var targetText: String = ""
+    @State private var sourceLanguageCode: String = ""
+    @State private var sourceLanguageAutoDetect: Bool = true
     @State private var targetLanguageCode: String = Defaults.shared.primaryLanguage
     @State private var height: CGFloat = 100
     @State private var isDictionaryMode: Bool = false
 
     private let MIN_HEIGHT: CGFloat = 40
+    @State private var lastHeight: CGFloat = 100
 
     private func _handleIncomingURL(_ url: URL) {
         guard url.scheme == APP_NAME else {
@@ -52,56 +56,68 @@ struct TranslateView: View {
         sourceText = src.removingPercentEncoding!
     }
 
+    private let debouncer = PassthroughSubject<String, Never>()
+
     var body: some View {
-        GeometryReader {geometry in
+        GeometryReader { geometry in
             VStack(alignment: .leading) {
                 // MARK: top bar
+
                 TopBarView()
                     .padding(EdgeInsets(top: 4, leading: 0, bottom: 0, trailing: 4))
 
                 VStack(alignment: .leading, spacing: 0) {
                     // MARK: source text field
-                    TranslateFieldView(text: $sourceText, placeholder: "Type any words to start...", onChange: onSourceInput)
+
+                    SourceFieldView(text: $sourceText, sourceLanguageCode: $sourceLanguageCode, sourceLanguageAutoDetect: $sourceLanguageAutoDetect, placeholder: "Type any words to start...", onChange: onSourceInput, debouncer: debouncer, isDictionaryMode: isDictionaryMode)
                         .frame(height: self.height)
 
                     // MARK: mid bar
-                    MidBarView(showButton: !isDictionaryMode, isLoading: provider.isTranslating, onSwap: onSwap) { height in
+
+                    MidBarView(showButton: !isDictionaryMode, isLoading: provider.isTranslating, isSwapDisabled: targetLanguageCode.isEmpty || sourceLanguageCode.isEmpty || targetText.isEmpty, onSwap: onSwap) { height in
                         self.height = floor(minMax(self.height + height, min: MIN_HEIGHT, max: geometry.size.height - 100))
                     }
 
                     // MARK: target text field
+
                     if targetText.starts(with: "<?xml") || targetText.starts(with: "<html") {
                         HTMLStringView(htmlContent: targetText)
                             .bottomFade()
                     } else {
-                        TranslateFieldView(text: $targetText, readOnly: true)
+                        TargetFieldView(text: $targetText)
                             .bottomFade()
                             .padding(EdgeInsets(top: 8, leading: 0, bottom: 0, trailing: 0))
                     }
                 }
 
                 Spacer(minLength: 2)
+
                 // MARK: bottom bar
-                BottomBarView(languageCode: $targetLanguageCode, isDictionaryMode: $isDictionaryMode, getCopyText: getTargetText, getSpeechText: getSourceText, onChangeProvider: onSourceInput)
-                .padding(10)
-                .onChange(of: targetLanguageCode, onSourceInput)
-                .onChange(of: isDictionaryMode) { _, newValue in
-                    if newValue {
-                        withAnimation {
-                            height = MIN_HEIGHT
+
+                BottomBarView(targetLanguageCode: $targetLanguageCode, isDictionaryMode: $isDictionaryMode, getCopyText: getTargetText, getSpeechText: getSourceText, onChangeProvider: onSourceInput)
+                    .padding(10)
+                    .onChange(of: targetLanguageCode, onSourceInput)
+                    .onChange(of: isDictionaryMode) { _, newValue in
+                        if newValue {
+                            withAnimation {
+                                lastHeight = height
+                                height = MIN_HEIGHT
+                            }
+                        } else {
+                            withAnimation {
+                                height = lastHeight
+                            }
                         }
+                        targetText = ""
+                        onSourceInput()
                     }
-                    targetText = ""
-                    onSourceInput()
-                }
             }
             .background(Color.backgroundColor.opacity(0.6))
             .background(BlurWindow())
-            .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+            .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/ .all/*@END_MENU_TOKEN@*/)
             .onOpenURL(perform: { url in
                 _handleIncomingURL(url)
             })
-
         }
     }
 
@@ -114,23 +130,45 @@ struct TranslateView: View {
     }
 
     func onSwap() {
+        (targetLanguageCode, sourceLanguageCode) = (sourceLanguageCode, targetLanguageCode)
         sourceText = targetText
-        targetLanguageCode = targetLanguageCode == Defaults.shared.primaryLanguage ? Defaults.shared.secondaryLanguage : Defaults.shared.primaryLanguage
     }
 
     func onSourceInput() {
         if sourceText.isEmpty {
             targetText = ""
-        } else {
-            provider.translate(sourceText, isDictionaryMode ? nil : LanguageManager.getLanguageByCode(targetLanguageCode)!, updateTargetText)
+            return
         }
+
+        // get next source language
+        var nextSourceLanguage: Language
+        if !sourceLanguageAutoDetect && !sourceLanguageCode.isEmpty {
+            nextSourceLanguage = LanguageManager.getLanguageByCode(sourceLanguageCode)
+        } else {
+            nextSourceLanguage = LanguageManager.getLanguageByContent(sourceText)
+        }
+
+        // get next target language
+        var nextTargetLanguage: Language
+        if isDictionaryMode {
+            nextTargetLanguage = nextSourceLanguage
+        } else {
+            nextTargetLanguage = LanguageManager.fixTargetLanguage(sourceLanguage: nextSourceLanguage, targetLanguage: LanguageManager.getLanguageByCode(targetLanguageCode))
+        }
+
+        provider.translate(sourceText, sourceLanguage: nextSourceLanguage, targetLanguage: nextTargetLanguage, updateTargetText)
     }
 
     func updateTargetText(_ result: ProviderCallbackData) {
-        self.targetText = result.target
-        self.isDictionaryMode = result.isDictionary
+        debugPrint("[updateTargetText]", result)
+
+        targetText = result.target
+        isDictionaryMode = result.isDictionary
         if result.targetLanguage != nil {
-            self.targetLanguageCode = result.targetLanguage!.code
+            targetLanguageCode = result.targetLanguage!.code
+        }
+        if result.sourceLanguage != nil {
+            sourceLanguageCode = result.sourceLanguage!.code
         }
     }
 }

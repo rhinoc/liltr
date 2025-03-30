@@ -1,8 +1,8 @@
-import SwiftUI
-import SwiftData
 import KeyboardShortcuts
-import UserNotifications
 import Sparkle
+import SwiftData
+import SwiftUI
+import UserNotifications
 
 let APP_NAME = Bundle.main.infoDictionary!["APP_NAME"] as! String
 
@@ -54,12 +54,16 @@ struct AppMenu: View {
     @Environment(\.openURL) private var openURL
     @Default(\.hotKey) var hotKey
     @Default(\.ocrHotKey) var ocrHotKey
+    @Default(\.ocrOnlyHotKey) var ocrOnlyHotKey
     @Default(\.primaryLanguage) var primaryLanguage
     @Default(\.hotKeyTriggerInNotification) var hotKeyTriggerInNotification
     @Default(\.preProcessSource) var preProcessSource
 
     private func _translateInNotification(text: String) {
-        ProviderManager.shared.translate(text, LanguageManager.getLanguageByCode(primaryLanguage)!) { data in
+        let sourceLanguage = LanguageManager.getLanguageByContent(text)
+        let targetLanguage = LanguageManager.fixTargetLanguage(sourceLanguage: sourceLanguage, targetLanguage: LanguageManager.primaryLanguage)
+
+        ProviderManager.shared.translate(text, sourceLanguage: sourceLanguage, targetLanguage: targetLanguage) { data in
             pushNotification(title: data.source, body: data.target)
         }
     }
@@ -77,6 +81,7 @@ struct AppMenu: View {
     }
 
     // MARK: hotkey
+
     private func _onHotKeyTranslate() {
         SelectedTextManager.shared.getText { text, _ in
             if text != nil && !text!.isEmpty && Defaults.shared.hotKeyTriggerInNotification {
@@ -97,9 +102,17 @@ struct AppMenu: View {
         }
     }
 
+    private func _onHotKeyOCROnly() {
+        OCRManager.shared.captureWithOCR { text in
+            PasteboardManager.shared.copy(text)
+            pushNotification(title: "OCR Result Copied", body: text)
+        }
+    }
+
     init() {
         KeyboardShortcuts.onKeyUp(for: .translate, action: _onHotKeyTranslate)
         KeyboardShortcuts.onKeyUp(for: .ocr, action: _onHotKeyOCR)
+        KeyboardShortcuts.onKeyUp(for: .ocrOnly, action: _onHotKeyOCROnly)
     }
 
     var body: some View {
@@ -107,8 +120,13 @@ struct AppMenu: View {
             Button(action: _onHotKeyTranslate, label: { Text("Translate") })
                 .keyboardShortcut(string2Shortcut(hotKey))
 
-            Button(action: _onHotKeyOCR, label: { Text("OCR Translate") })
-                .keyboardShortcut(string2Shortcut(ocrHotKey))
+            Menu("OCR") {
+                Button(action: _onHotKeyOCROnly, label: { Text("OCR Only") })
+                    .keyboardShortcut(string2Shortcut(ocrOnlyHotKey))
+
+                Button(action: _onHotKeyOCR, label: { Text("OCR and Translate") })
+                    .keyboardShortcut(string2Shortcut(ocrHotKey))
+            }
 
             Button(action: _gotoSettings, label: { Text("Settings...") })
 

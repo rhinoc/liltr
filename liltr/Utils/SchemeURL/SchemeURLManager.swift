@@ -2,8 +2,8 @@ import Foundation
 
 enum SchemeAction: String {
     case translateInWindow = "translate-in-window"
-    case settings = "settings"
-    case update = "update"
+    case settings
+    case update
 }
 
 class SchemeURLManager {
@@ -13,8 +13,7 @@ class SchemeURLManager {
         components.host = action.rawValue
         components.queryItems = querys.map {
             URLQueryItem(name: $0,
-                         value: $1.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-            )
+                         value: $1.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed))
         }
 
         return components.url!

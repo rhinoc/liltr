@@ -37,18 +37,18 @@ class TextHandler {
     private static func _transformLine(_ line: String) -> String {
         let trimedLine = _removeCommentsFromLine(line)
         let words = trimedLine.split(separator: " ").map { word in
-            return _transformWord(String(word))
+            _transformWord(String(word))
         }
         return words.joined(separator: " ")
     }
 
     static func handle(_ content: String) -> String {
         let originalLines = content.split(separator: "\n").filter { line in
-            return !line.isEmpty
+            !line.isEmpty
         }
 
         let lines = originalLines.map { line in
-            return _transformLine(String(line))
+            _transformLine(String(line))
         }
 
         var separator = " "

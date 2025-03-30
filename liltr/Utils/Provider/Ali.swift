@@ -1,6 +1,6 @@
 import Alamofire
-import Foundation
 import CryptoKit
+import Foundation
 
 struct AliResult: Decodable {
     let Translated: String?
@@ -50,7 +50,7 @@ class AliProvider: BaseProvider {
     }
 
     private func _getHeaders() -> HTTPHeaders {
-        let date = self._getDate()
+        let date = _getDate()
         let url = URL(string: apiUrl)!
         let path = url.path
         let uuid = String(Int(round(Date().timeIntervalSince1970)))
@@ -60,10 +60,10 @@ class AliProvider: BaseProvider {
             "Date": date,
             "Host": "mt.cn-hangzhou.aliyuncs.com",
             "x-acs-signature-method": "HMAC-SHA1",
-            "x-acs-signature-nonce": uuid
+            "x-acs-signature-nonce": uuid,
         ]
 
-        let stringToSignArr: [String] = ["POST", headers["Accept"]!+"\n", headers["Content-Type"]!, headers["Date"]!, "x-acs-signature-method:HMAC-SHA1", "x-acs-signature-nonce:\(uuid)", path]
+        let stringToSignArr: [String] = ["POST", headers["Accept"]! + "\n", headers["Content-Type"]!, headers["Date"]!, "x-acs-signature-method:HMAC-SHA1", "x-acs-signature-nonce:\(uuid)", path]
         let stringToSign = stringToSignArr.joined(separator: "\n")
         let signature = hmac_sha1(sk, stringToSign)
         let authHeader = "acs \(ak):\(signature)"
@@ -79,13 +79,13 @@ class AliProvider: BaseProvider {
         return Data(hmac).base64EncodedString()
     }
 
-    func translate(source: String, from: Language, to: Language, cb: @escaping (_ target: String, _ _sourceLanguage: Language?, _ _targetLanguage: Language?) -> Void) {
+    func translate(source: String, from: Language, to: Language, cb: @escaping (_ target: String, _ errorCode: Int) -> Void) {
         let parameters: [String: String] = [
             "FormatType": "text",
             "SourceText": source,
             "SourceLanguage": from.shortCode,
             "TargetLanguage": to.shortCode,
-            "Scene": "general"
+            "Scene": "general",
         ]
         let headers = _getHeaders()
 
@@ -95,13 +95,12 @@ class AliProvider: BaseProvider {
             .cacheResponse(using: .cache)
             .responseDecodable(of: AliResponse.self) { response in
                 if response.error != nil {
-                    cb(response.error!.errorDescription!, nil, nil)
+                    cb(response.error!.errorDescription!, 1000)
                 } else if response.value?.errorMessage != nil {
-                    cb(response.value!.errorMessage!, nil, nil)
+                    cb(response.value!.errorMessage!, 1001)
                 } else {
-                    cb(response.value!.target!, from, to)
+                    cb(response.value!.target!, 0)
                 }
             }
     }
-
 }
