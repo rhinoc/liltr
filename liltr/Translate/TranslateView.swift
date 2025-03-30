@@ -161,7 +161,7 @@ struct TranslateView: View {
 
     func updateTargetText(_ result: ProviderCallbackData) {
         debugPrint("[updateTargetText]", result)
-        
+
         if result.errorCode == 0 {
             targetText = result.target
         } else {

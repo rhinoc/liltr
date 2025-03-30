@@ -139,22 +139,25 @@ class VolcengineProvider: BaseProvider {
             "TargetLanguage": to.shortCode,
             "TextList": source.split(separator: "\n"),
         ]
+        // ensure the json key order is certain, and use this as reaquest body for AF
+        let jsonData = try! JSONSerialization.data(withJSONObject: parameters, options: [.sortedKeys])
+        let jsonString = String(data: jsonData, encoding: .utf8)!
+
 
         let date = _getXDate()
-        let contentHashed = _hashSha256(content: String(data: try! JSONSerialization.data(withJSONObject: parameters, options: []), encoding: .utf8)!)
+        let contentHashed = _hashSha256(content: jsonString)
 
         var headers = [
             "Content-Type": "application/json",
             "Host": host,
+            "X-Content-Sha256": contentHashed,
             "X-Date": date,
         ]
 
         let authorization = _sign(contentHashed: contentHashed, headers: headers)
         headers.updateValue(authorization, forKey: "Authorization")
 
-        debugPrint("[VolcengineProvider] parameters:", parameters, headers)
-
-        AF.request(apiUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: dict2headers(dict: headers))
+        AF.upload(jsonData, to: apiUrl, method: .post, headers: dict2headers(dict: headers))
             .cacheResponse(using: .cache)
             .responseDecodable(of: VolcengineResponse.self) { response in
                 if response.error != nil {
