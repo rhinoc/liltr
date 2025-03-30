@@ -143,7 +143,6 @@ class VolcengineProvider: BaseProvider {
         let jsonData = try! JSONSerialization.data(withJSONObject: parameters, options: [.sortedKeys])
         let jsonString = String(data: jsonData, encoding: .utf8)!
 
-
         let date = _getXDate()
         let contentHashed = _hashSha256(content: jsonString)
 

@@ -107,7 +107,9 @@ struct ProvidersView: View {
 
                 ProviderKeyField(label: "Ollama", icon: "6.square", ak: $ollamaApi, sk: $ollamaModel)
 
-            }).padding(EdgeInsets(top: 0, leading: _gapSize * 2, bottom: 0, trailing: _gapSize * 2))
+            })
+            .padding(EdgeInsets(top: 0, leading: _gapSize * 2, bottom: 0, trailing: _gapSize * 2))
+            .tabViewStyle(.grouped)
         }
         .frame(width: 500, height: 220)
     }
