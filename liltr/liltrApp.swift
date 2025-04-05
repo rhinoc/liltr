@@ -83,29 +83,35 @@ struct AppMenu: View {
     // MARK: hotkey
 
     private func _onHotKeyTranslate() {
-        SelectedTextManager.shared.getText { text, _ in
-            if text != nil && !text!.isEmpty && Defaults.shared.hotKeyTriggerInNotification {
-                _translateInNotification(text: text!)
-            } else {
-                _gotoTranslate(text: text ?? "")
+        withKeyboardShortcutsDisabled {
+            SelectedTextManager.shared.getText { text, _ in
+                if text != nil && !text!.isEmpty && Defaults.shared.hotKeyTriggerInNotification {
+                    _translateInNotification(text: text!)
+                } else {
+                    _gotoTranslate(text: text ?? "")
+                }
             }
         }
     }
 
     private func _onHotKeyOCR() {
-        OCRManager.shared.captureWithOCR { text in
-            if Defaults.shared.hotKeyTriggerInNotification {
-                _translateInNotification(text: text)
-            } else {
-                _gotoTranslate(text: text)
+        withKeyboardShortcutsDisabled {
+            OCRManager.shared.captureWithOCR { text in
+                if Defaults.shared.hotKeyTriggerInNotification {
+                    _translateInNotification(text: text)
+                } else {
+                    _gotoTranslate(text: text)
+                }
             }
         }
     }
 
     private func _onHotKeyOCROnly() {
-        OCRManager.shared.captureWithOCR { text in
-            PasteboardManager.shared.copy(text)
-            pushNotification(title: "OCR Result Copied", body: text)
+        withKeyboardShortcutsDisabled {
+            OCRManager.shared.captureWithOCR { text in
+                PasteboardManager.shared.copy(text)
+                pushNotification(title: "OCR Result Copied", body: text)
+            }
         }
     }
 

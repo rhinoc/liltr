@@ -34,6 +34,9 @@ struct GeneralView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
+            Spacer()
+                .frame(height: 16)
+
             HStack(alignment: .center) {
                 AlignedText(text: "Startup")
                 Toggle(isOn: $launchAtLogin, label: {
@@ -141,7 +144,7 @@ struct GeneralView: View {
     }
 }
 
-#Preview("Provider", traits: .fixedLayout(width: 400, height: 500)) {
+#Preview("General", traits: .fixedLayout(width: 400, height: 500)) {
     GeneralView()
         .padding()
 }

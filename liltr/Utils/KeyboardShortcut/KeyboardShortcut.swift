@@ -30,3 +30,10 @@ func string2Shortcut(_ str: String) -> KeyboardShortcut? {
 
     return KeyboardShortcut(KeyEquivalent(str.last!), modifiers: modifiers)
 }
+
+func withKeyboardShortcutsDisabled<T>(_ action: () -> T) -> T {
+    KeyboardShortcuts.isEnabled = false
+    let result = action()
+    KeyboardShortcuts.isEnabled = true
+    return result
+}
