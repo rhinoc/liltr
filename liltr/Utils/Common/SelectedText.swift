@@ -14,7 +14,7 @@ class SelectedTextManager {
 
         _getByAppleScript { textByAS, _ in
             debugPrint("[SelectedTextManager#_getByAppleScript] ->", textByAS)
-            if textByAS != nil, !textByAX!.isEmpty {
+            if textByAS != nil, !textByAS!.isEmpty {
                 completion(textByAS, nil)
                 return
             }
@@ -31,6 +31,11 @@ class SelectedTextManager {
 
         let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true]
         let accessEnabled = AXIsProcessTrustedWithOptions(options)
+
+        guard accessEnabled else {
+            debugPrint("[SelectedTextManager#_getByAX] Accessibility permission is not granted")
+            return nil
+        }
 
         var selectedTextValue: AnyObject?
         let errorCode = AXUIElementCopyAttributeValue(systemWideElement, kAXFocusedUIElementAttribute as CFString, &selectedTextValue)

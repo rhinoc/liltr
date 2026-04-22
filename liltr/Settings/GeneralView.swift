@@ -1,4 +1,5 @@
 import KeyboardShortcuts
+import ApplicationServices
 import ServiceManagement
 import SwiftUI
 import WebKit
@@ -31,6 +32,7 @@ struct GeneralView: View {
     @Default(\.secondaryLanguage) var secondaryLanguage
     @Default(\.menuIconSymbol) public var menuIconSymbol
     @Default(\.preProcessSource) var preProcessSource
+    @State private var hasAccessibilityPermission = AXIsProcessTrusted()
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -63,6 +65,16 @@ struct GeneralView: View {
             HStack {
                 AlignedText(text: "OCR Only HotKey")
                 KeyboardShortcuts.Recorder(for: .ocrOnly, onChange: onOCROnlyHotkeyChange)
+            }
+
+            if !hasAccessibilityPermission {
+                HStack(alignment: .top) {
+                    AlignedText(text: "Permissions")
+                    Text("Grant Accessibility to liltr in System Settings > Privacy & Security > Accessibility. Newer macOS versions may also require Input Monitoring for selected-text capture.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
 
             HStack {
@@ -101,6 +113,9 @@ struct GeneralView: View {
             //            }
         }
         .frame(width: 400, height: 230)
+        .onAppear {
+            hasAccessibilityPermission = AXIsProcessTrusted()
+        }
     }
 
     func setLaunchAtLogin(_ enable: Bool) {

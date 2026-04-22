@@ -50,7 +50,6 @@ struct liltrApp: App {
 }
 
 struct AppMenu: View {
-    @Environment(\.openWindow) private var openWindow
     @Environment(\.openURL) private var openURL
     @Default(\.hotKey) var hotKey
     @Default(\.ocrHotKey) var ocrHotKey
@@ -58,15 +57,6 @@ struct AppMenu: View {
     @Default(\.primaryLanguage) var primaryLanguage
     @Default(\.hotKeyTriggerInNotification) var hotKeyTriggerInNotification
     @Default(\.preProcessSource) var preProcessSource
-
-    private func _translateInNotification(text: String) {
-        let sourceLanguage = LanguageManager.getLanguageByContent(text)
-        let targetLanguage = LanguageManager.fixTargetLanguage(sourceLanguage: sourceLanguage, targetLanguage: LanguageManager.primaryLanguage)
-
-        ProviderManager.shared.translate(text, sourceLanguage: sourceLanguage, targetLanguage: targetLanguage) { data in
-            pushNotification(title: data.source, body: data.target)
-        }
-    }
 
     private func _gotoTranslate(text: String? = nil) {
         openURL(SchemeURLManager.getUrlByAction(SchemeAction.translateInWindow, querys: ["src": text ?? ""]))
@@ -83,42 +73,15 @@ struct AppMenu: View {
     // MARK: hotkey
 
     private func _onHotKeyTranslate() {
-        withKeyboardShortcutsDisabled {
-            SelectedTextManager.shared.getText { text, _ in
-                if text != nil && !text!.isEmpty && Defaults.shared.hotKeyTriggerInNotification {
-                    _translateInNotification(text: text!)
-                } else {
-                    _gotoTranslate(text: text ?? "")
-                }
-            }
-        }
+        HotkeyActionManager.shared.handleTranslate()
     }
 
     private func _onHotKeyOCR() {
-        withKeyboardShortcutsDisabled {
-            OCRManager.shared.captureWithOCR { text in
-                if Defaults.shared.hotKeyTriggerInNotification {
-                    _translateInNotification(text: text)
-                } else {
-                    _gotoTranslate(text: text)
-                }
-            }
-        }
+        HotkeyActionManager.shared.handleOCR()
     }
 
     private func _onHotKeyOCROnly() {
-        withKeyboardShortcutsDisabled {
-            OCRManager.shared.captureWithOCR { text in
-                PasteboardManager.shared.copy(text)
-                pushNotification(title: "OCR Result Copied", body: text)
-            }
-        }
-    }
-
-    init() {
-        KeyboardShortcuts.onKeyUp(for: .translate, action: _onHotKeyTranslate)
-        KeyboardShortcuts.onKeyUp(for: .ocr, action: _onHotKeyOCR)
-        KeyboardShortcuts.onKeyUp(for: .ocrOnly, action: _onHotKeyOCROnly)
+        HotkeyActionManager.shared.handleOCROnly()
     }
 
     var body: some View {

@@ -5,6 +5,7 @@ import UserNotifications
 class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_: Notification) {
         UNUserNotificationCenter.current().delegate = self
+        HotkeyActionManager.shared.register()
     }
 }
 
